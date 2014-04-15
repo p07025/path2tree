@@ -1,5 +1,6 @@
 package com.sample.path2tree.strategies;
 
+import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
@@ -8,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
-import com.sample.path2tree.entity.Component;
 import com.sample.path2tree.entity.Leaf;
 import com.sample.path2tree.entity.Node;
 
@@ -16,7 +16,6 @@ public class StringPathTreeCreator implements IStringParseStrategy {
 
 	public Node<String> addPath(String path, Node<String> root) {
 		Queue<String> q = pathToQueue(path);
-		
 		if(q.isEmpty()) return root;
 		
 		String value = q.poll();
@@ -31,14 +30,18 @@ public class StringPathTreeCreator implements IStringParseStrategy {
 		return root;
 	}
 	
+	/**
+	 * ファイルパスから各ファイル/ディレクトリをQueueに変換する
+	 * @param path
+	 * @return
+	 */
 	private Queue<String> pathToQueue(String path){
-		List<String> list = Lists.newArrayList(Objects.requireNonNull(path).split("/"));
+		List<String> list = Lists.newArrayList(Objects.requireNonNull(path).split(File.separator));
 		list.remove(StringUtils.EMPTY);
 		return Queues.newArrayDeque(list);
 	}
 	
 	private void createTree(Node<String> c, final Queue<String> path) {
-		
 		if(path.peek()!=null){
 			String value = path.poll();
 			if(path.isEmpty()){
